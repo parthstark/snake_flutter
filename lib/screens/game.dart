@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import 'homescreen.dart';
+import 'home.dart';
 
 class Game extends StatefulWidget {
   @override
@@ -99,21 +99,26 @@ class _GameState extends State<Game> {
     showDialog(context: context,
       builder: (BuildContext context){
         return AlertDialog(
-          title: Text('Game Over'),
-          content: Text('Your score: ' + (snakePos.length-3).toString()),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Game Over', textScaleFactor: 2, style: TextStyle(fontFamily: 'Girassol')),
+            ],
+          ),
+          // content: Text('Your score: ' + (snakePos.length-3).toString(), style: TextStyle(fontFamily: 'Girassol')),
           actions: [
             FlatButton(onPressed:(){
               direction='down';
               startGame();
               Navigator.of(context).pop();
             }, 
-              child: Text('Play Again')
+              child: Text('Play Again', style: TextStyle(color:Colors.teal),)
             ),
             FlatButton(onPressed:(){
               Navigator.of(context).pop();
               Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context)=>Home()));
             },
-              child: Text('Exit')
+              child: Text('Exit', style: TextStyle(color:Colors.teal),)
             )
           ],
         );
@@ -127,16 +132,21 @@ class _GameState extends State<Game> {
     showDialog(context: context,
       builder: (BuildContext context){
         return AlertDialog(
-          title: Text('Do you want to exit?'),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Do you want to exit?', textScaleFactor: 1.3, style: TextStyle(fontFamily: 'Girassol')),
+            ],
+          ),
           actions: [
             FlatButton(
-              child: Text('No'),
+              child: Text('No',style:TextStyle(color:Colors.teal)),
               onPressed:(){
               Navigator.of(context).pop();
             }, 
             ),
             FlatButton(
-              child: Text('Yes'),
+              child: Text('Yes',style:TextStyle(color:Colors.teal)),
               onPressed:(){
               Navigator.of(context).pop();
               Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context)=>Home()));
@@ -162,55 +172,60 @@ class _GameState extends State<Game> {
       body: WillPopScope(
         onWillPop:onWillPop,
         child: SafeArea(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GestureDetector(
-                onVerticalDragUpdate: (details){
-                  if(direction!='up' && details.delta.dy>0){
-                    direction='down';
-                  }
-                  else if(direction!='down' && details.delta.dy<0){
-                    direction='up';
-                  }
-                },
-                onHorizontalDragUpdate: (details){
-                  if(direction!='left' && details.delta.dx>0){
-                    direction='right';
-                  }
-                  else if(direction!='right' && details.delta.dx<0){
-                    direction='left';
-                  }
-                },
-                child: Container(
-                  child: GridView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: _count,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount:20), 
-                    itemBuilder: (BuildContext context, int index){
-                      if(index==food){
-                        return Padding(
-                          padding: const EdgeInsets.all(2),
-                          child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),color: Colors.red,),)
-                        );
-                      }
-                      if(snakePos.contains(index)){
-                        return Padding(
-                          padding: const EdgeInsets.all(2),
-                          child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),color: Colors.white,),)
-                        );
-                      }else{
-                        return Padding(
-                          padding: const EdgeInsets.all(2),
-                          child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),color: Colors.black,),)
-                        );
-                      }
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text('Score: '+(snakePos.length-3).toString(), style: TextStyle(fontFamily: 'Girassol', color:Colors.white), textScaleFactor: 3),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onVerticalDragUpdate: (details){
+                    if(direction!='up' && details.delta.dy>0){
+                      direction='down';
                     }
+                    else if(direction!='down' && details.delta.dy<0){
+                      direction='up';
+                    }
+                  },
+                  onHorizontalDragUpdate: (details){
+                    if(direction!='left' && details.delta.dx>0){
+                      direction='right';
+                    }
+                    else if(direction!='right' && details.delta.dx<0){
+                      direction='left';
+                    }
+                  },
+                  child: Container(
+                    child: GridView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: _count,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount:20), 
+                      itemBuilder: (BuildContext context, int index){
+                        if(index==food){
+                          return Padding(
+                            padding: const EdgeInsets.all(2),
+                            child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),color: Colors.red,),)
+                          );
+                        }
+                        if(snakePos.contains(index)){
+                          return Padding(
+                            padding: const EdgeInsets.all(2),
+                            child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),color: Colors.white,),)
+                          );
+                        }else{
+                          return Padding(
+                            padding: const EdgeInsets.all(2),
+                            child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),color: Colors.black,),)
+                          );
+                        }
+                      }
+                    ),
                   ),
                 ),
               ),
-            ),
+            ],
           ),
         ),
       )
